@@ -7,32 +7,25 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import utils.SeleniumHelper;
 
-public class ProductPage {
-
+public class ProductPage extends MiniCartPage {
 
     @FindBy(xpath = "//button[@id='product-addtocart-button']")
     private WebElement addToCartButton;
 
     @FindBy(xpath = "//a[@class='action showcart']")
-    private WebElement cartButton;
+    private WebElement miniCartButton;
 
     @FindBy(xpath = "//span[@class='counter qty']")
-    private WebElement cartButtonRed;
+    private WebElement miniCartButtonRed;
 
     @FindBy(xpath = "//strong[@class='product-item-name']//a[contains(@data-bind, 'attr: {href: product_url}, html: product_name')]")
     private WebElement productName;
-
-//    @FindBy(xpath = "product-price-1130")
-//    private WebElement productPrice;
 
     @FindBy(xpath = "//div[@class='amount price-container']//span[contains(@class,'price')]")
     private WebElement totalProductPrice;
 
     @FindBy(xpath = "//div[@class=('control')]//input[@value='1']")
     private WebElement qtyInput;
-
-    @FindBy(xpath = "//span[@class=('count')]")
-    private WebElement itemsCount;
 
     private WebDriver driver;
 
@@ -52,15 +45,39 @@ public class ProductPage {
         return this;
     }
 
+    public ProductPage updateProduct(String size, String color) {
+        By xpathSize = By.xpath("//div[text()='"+ size +"']");
+        By xpathColor = By.xpath("//div[@option-label='"+ color +"']");
+        SeleniumHelper.waitForClickable(xpathSize, driver);
+        driver.findElement(xpathSize).click();
+        SeleniumHelper.waitForClickable(xpathColor, driver);
+        driver.findElement(xpathColor).click();
+        getUpdateCart().click();
+        return this;
+    }
+
     public ProductPage setQuantity(String qty) {
         qtyInput.clear();
         qtyInput.sendKeys(qty);
         return this;
     }
 
-    public ProductPage viewCart() {
-        SeleniumHelper.waitForClickable(cartButtonRed, driver);
-        cartButton.click();
+    public ProductPage editProductInTheMiniCart() {
+        getMiniCartEditButton().click();
+        return this;
+    }
+
+    public ProductPage viewMiniCart() {
+        SeleniumHelper.waitForClickable(miniCartButtonRed, driver);
+        miniCartButton.click();
+        return this;
+    }
+
+    public ProductPage deleteItemFromTheMiniCart() {
+        SeleniumHelper.waitForVisible(getDeleteButton(), driver);
+        getDeleteButton().click();
+        SeleniumHelper.waitForClickable(getDeleteConfirmationButton(), driver);
+        getDeleteConfirmationButton().click();
         return this;
     }
 
@@ -72,10 +89,14 @@ public class ProductPage {
         return totalProductPrice;
     }
 
-    public WebElement getItemsCount() {
-        return itemsCount;
-    }
-
+//Chyba nie maja sensu, bo i tak uzywa z MiniCartPage
+//    public WebElement itemInCart() {
+//        return getItemInCart();
+//    }
+//
+//    public WebElement noItemsInTheMiniCartInformation() {
+//        return getNoItemsInTheMiniCartInformation();
+//    }
 
 
 
