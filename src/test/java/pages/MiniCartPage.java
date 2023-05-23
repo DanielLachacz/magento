@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import utils.SeleniumHelper;
 
 public class MiniCartPage {
 
@@ -30,6 +31,17 @@ public class MiniCartPage {
 
     private WebDriver driver;
 
+    public MiniCartPage(WebDriver driver) {
+        PageFactory.initElements(driver, this);
+        this.driver = driver;
+    }
+
+    public ShippingAddressPage openShippingAddressPage() {
+        SeleniumHelper.waitForElement(driver, proceedToCheckoutButton);
+        proceedToCheckoutButton.click();
+        return new ShippingAddressPage(driver);
+    }
+
     public WebElement getItemInCart() {
         return itemInCart;
     }
@@ -48,10 +60,6 @@ public class MiniCartPage {
 
     public WebElement getNoItemsInTheMiniCartInformation() {
         return noItemsInTheMiniCartInformation;
-    }
-
-    public WebElement getProceedToCheckoutButton() {
-        return proceedToCheckoutButton;
     }
 
     public WebElement getUpdateCart() {

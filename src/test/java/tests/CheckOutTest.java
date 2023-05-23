@@ -1,10 +1,9 @@
 package tests;
 
+import org.example.models.Customer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import pages.HomePage;
-import pages.ProductPage;
-import pages.ShoppingCartPage;
+import pages.*;
 
 public class CheckOutTest extends BaseTest{
 
@@ -37,8 +36,8 @@ public class CheckOutTest extends BaseTest{
     }
 
     @Test
-    public void editItem() {  //honestly not sure about this solution
-        ProductPage productPage =
+    public void editItem() {
+        ShoppingCartPage shoppingCartPage =
                 new HomePage(driver)
                         .openWhatsNewPage()
                         .openProduct("Phoebe Zipper Sweatshirt")
@@ -46,8 +45,6 @@ public class CheckOutTest extends BaseTest{
                         .viewMiniCart()
                         .editProductInTheMiniCart()
                         .updateProduct("S", "White");
-
-        ShoppingCartPage shoppingCartPage = new ShoppingCartPage(driver);
 
         Assert.assertEquals(shoppingCartPage.getUpdateInfoBar()
                 .getText(), "Phoebe Zipper Sweatshirt was updated in your shopping cart.");
@@ -68,6 +65,24 @@ public class CheckOutTest extends BaseTest{
                 productPage
                         .getNoItemsInTheMiniCartInformation()
                         .getText(), "You have no items in your shopping cart.");
+
+    }
+
+    @Test
+    public void checkoutTest() {
+        Customer customer = new Customer();
+
+        SuccessPage successPage =
+                new HomePage(driver)
+                        .openWhatsNewPage()
+                        .openProduct("Phoebe Zipper Sweatshirt")
+                        .addProductToCart("S", "Purple")
+                        .viewMiniCart()
+                        .openShippingAddressPage()
+                        .fillAddressDetails(customer)
+                                .openSuccessPage();
+
+        Assert.assertTrue(successPage.getCheckoutSuccessTitle().isDisplayed());
 
     }
 }

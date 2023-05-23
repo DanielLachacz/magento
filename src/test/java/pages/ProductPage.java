@@ -30,6 +30,7 @@ public class ProductPage extends MiniCartPage {
     private WebDriver driver;
 
     public ProductPage(WebDriver driver) {
+        super(driver);
         PageFactory.initElements(driver, this);
         this.driver = driver;
     }
@@ -41,11 +42,12 @@ public class ProductPage extends MiniCartPage {
         driver.findElement(xpathSize).click();
         SeleniumHelper.waitForClickable(xpathColor, driver);
         driver.findElement(xpathColor).click();
+        SeleniumHelper.waitForClickable(addToCartButton, driver);
         addToCartButton.click();
         return this;
     }
 
-    public ProductPage updateProduct(String size, String color) {
+    public ShoppingCartPage updateProduct(String size, String color) {
         By xpathSize = By.xpath("//div[text()='"+ size +"']");
         By xpathColor = By.xpath("//div[@option-label='"+ color +"']");
         SeleniumHelper.waitForClickable(xpathSize, driver);
@@ -53,7 +55,7 @@ public class ProductPage extends MiniCartPage {
         SeleniumHelper.waitForClickable(xpathColor, driver);
         driver.findElement(xpathColor).click();
         getUpdateCart().click();
-        return this;
+        return new ShoppingCartPage(driver);
     }
 
     public ProductPage setQuantity(String qty) {
@@ -89,14 +91,6 @@ public class ProductPage extends MiniCartPage {
         return totalProductPrice;
     }
 
-//Chyba nie maja sensu, bo i tak uzywa z MiniCartPage
-//    public WebElement itemInCart() {
-//        return getItemInCart();
-//    }
-//
-//    public WebElement noItemsInTheMiniCartInformation() {
-//        return getNoItemsInTheMiniCartInformation();
-//    }
 
 
 
